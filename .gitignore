@@ -1,7 +1,5 @@
-logs/
-Data_zoo
-logs/
-Data_zoo
+*.DS_Store
 *.pyc
 
-
+logs/
+Data_zoo
