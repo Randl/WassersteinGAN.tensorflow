@@ -212,7 +212,9 @@ class GAN(object):
         optim = self._get_optimizer(optimizer, learning_rate, optimizer_param)
 
         self.generator_train_op = self._train(self.gen_loss, self.generator_variables, optim)
-        self.discriminator_train_op = self._train(self.discriminator_loss, self.discriminator_variables, optim)
+        update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        with tf.control_dependencies(update_ops):
+            self.discriminator_train_op = self._train(self.discriminator_loss, self.discriminator_variables, optim)
 
     def initialize_network(self, logs_dir):
         print("Initializing network...")
