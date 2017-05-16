@@ -14,6 +14,7 @@ if utils_folder not in sys.path:
 
 import utils as utils
 import Dataset_Reader.read_celebADataset as celebA
+import ops
 from six.moves import xrange
 
 
@@ -324,8 +325,9 @@ class WasserstienGAN(GAN):
                     h_bn = h_conv
                     skip_bn = False
                 else:
-                    # h_bn = utils.batch_norm(h_conv, dims[index + 1], train_phase, scope="disc_bn%d" % index)
-                    h_bn = tf.contrib.layers.batch_norm(inputs=h_conv, decay=0.9, epsilon=1e-5, is_training=train_phase, scope="disc_bn%d" % index)
+                    d_bn = ops.batch_norm(name='d_bn{0}'.format(index))
+                    h_bn = d_bn(h_conv, train=train_phase)
+
                 h = activation(h_bn, name="h_%d" % index)
                 utils.add_activation_summary(h)
 
