@@ -1,2 +1,1 @@
-python main.py --logs_dir=logs/CelebA_WGAN_logs2/ --optimizer=RMSProp --learning_rate=5e-5 --optimizer_param=0.9 --model=1 --iterations=1e5 --mode=train 
-
+python3 main.py --logs_dir=logs/CelebA_WGAN_logs3/ --optimizer=RMSProp --learning_rate=5e-5 --optimizer_param=0.9 --model=1 --iterations=1e5 --mode=train --data_dir="/SSD-DATA/chaimb/CelebA/Img/img_align_celeba_png.7z" --XLA

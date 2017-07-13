@@ -21,13 +21,14 @@ tf.flags.DEFINE_integer("model", "0", "Model to train. 0 - GAN, 1 - WassersteinG
 tf.flags.DEFINE_string("optimizer", "Adam", "Optimizer to use for training")
 tf.flags.DEFINE_integer("gen_dimension", "16", "dimension of first layer in generator")
 tf.flags.DEFINE_string("mode", "train", "train / visualize model")
+tf.flags.DEFINE_bool('XLA', False, "use XLA compiler.")
 
 
 def main(argv=None):
     gen_dim = FLAGS.gen_dimension
     generator_dims = [64 * gen_dim, 64 * gen_dim // 2, 64 * gen_dim // 4, 64 * gen_dim // 8, 3]
     discriminator_dims = [3, 64, 64 * 2, 64 * 4, 64 * 8, 1]
-
+    
     crop_image_size, resized_image_size = map(int, FLAGS.image_size.split(','))
     if FLAGS.model == 0:
         model = GAN(FLAGS.z_dim, crop_image_size, resized_image_size, FLAGS.batch_size, FLAGS.data_dir)
@@ -36,12 +37,12 @@ def main(argv=None):
                                clip_values=(-0.01, 0.01), critic_iterations=5)
     else:
         raise ValueError("Unknown model identifier - FLAGS.model=%d" % FLAGS.model)
-
+    
     model.create_network(generator_dims, discriminator_dims, FLAGS.optimizer, FLAGS.learning_rate,
                          FLAGS.optimizer_param)
-
-    model.initialize_network(FLAGS.logs_dir)
-
+    
+    model.initialize_network(FLAGS.logs_dir, FLAGS.XLA)
+    
     if FLAGS.mode == "train":
         model.train_model(int(1 + FLAGS.iterations))
     elif FLAGS.mode == "visualize":
